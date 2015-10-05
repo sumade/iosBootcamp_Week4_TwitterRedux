@@ -2,7 +2,7 @@
 
 This is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
 
-Time spent: `19`
+Time spent: `21`
 
 ### Features
 - user can sign into twitter usign OAuth login flow
