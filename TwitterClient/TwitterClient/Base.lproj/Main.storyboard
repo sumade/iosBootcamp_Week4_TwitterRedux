@@ -460,11 +460,9 @@
                         <outlet property="profileImageView" destination="vgf-oq-rxl" id="It7-89-4T3"/>
                         <outlet property="tweetButton" destination="3Yt-L8-ZjR" id="FNF-7i-3eY"/>
                         <outlet property="tweetTextView" destination="32g-Kq-Qjk" id="lpS-zD-eCS"/>
-                        <segue destination="wuJ-KC-r4W" kind="unwind" identifier="sentTweetSegue" unwindAction="unwindToHomeTimeline:" id="dHU-Wn-PAa"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZeL-aj-Cec" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="wuJ-KC-r4W" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2071" y="466"/>
         </scene>
@@ -482,6 +480,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="cS0-dk-0ti"/>
-        <segue reference="2Ve-EU-fFS"/>
+        <segue reference="U9z-cz-wwh"/>
     </inferredMetricsTieBreakers>
 </document>

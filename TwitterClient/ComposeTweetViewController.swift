@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TweetCreatedHandler {
+    func createdNewTweet(tweet: Tweet)
+}
+
 class ComposeTweetViewController: UIViewController, UITextViewDelegate {
 
     // MARK: ui outlets
@@ -16,9 +20,13 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var tweetButton: UIButton!
     @IBOutlet weak var tweetTextView: UITextView!
     
-    var tweet : Tweet?
+    private var tweet : Tweet?
+    var tweetHandler : TweetCreatedHandler?
+    weak var replyTweet : Tweet?
     
-    private var characterCount : Int = 140 {
+    private static let maxCharacters = 140
+    
+    private var characterCount : Int = maxCharacters {
         didSet {
             characterCountLabel.text = "\(characterCount)"
             if characterCount < 0 {
@@ -41,8 +49,6 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         NSNotificationCenter.defaultCenter().removeObserver(self);
     }
     
-    var replyUser : User?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,13 +57,14 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         characterCountLabel.text = "\(characterCount)"
         tweetTextView.delegate = self
         
+        if let user = replyTweet?.user {
+            tweetTextView.text = "@" + user.screenName!
+        }
+
         // keyboard handling
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
         
-        if let user = replyUser {
-            tweetTextView.text = "@" + user.screenName!
-        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -67,38 +74,40 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidBeginEditing(textView: UITextView) {
         tweetTextView.textColor = UIColor.blackColor()
-        if replyUser == nil {
+        if let _ = replyTweet?.user {
+            // do nothing for now
+        }else{
+            // clear the text field
             tweetTextView.text = ""
         }
     }
     
     func textViewDidChange(textView: UITextView) {
-        characterCount = 140-(tweetTextView.text?.characters.count)!
+        characterCount = ComposeTweetViewController.maxCharacters-(tweetTextView.text?.characters.count)!
     }
     
     func textViewDidEndEditing(textView: UITextView) {
         textView.resignFirstResponder()
     }
     
-    /*
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        characterCount = 140-(tweetTextView.text?.characters.count)!
-        return true
-    }
-    */
 
     @IBAction func sendTweet(sender: AnyObject) {
         if let text = tweetTextView.text where !text.isEmpty {
             // tweet to compose
-            let params : Dictionary<String, String>= ["status":text]
+            var params : Dictionary<String, String>= [Constants.TwitterParms.tweetText:text]
+            
+            // if in reply to....
+            if let reply = replyTweet {
+                params[Constants.TwitterParms.replyToStatus] = reply.idStr
+            }
+            
             Twitter.sendTweet(text, params: params) {
                 (tweet: Tweet?, error: NSError?) -> Void in
-                if error == nil {
-//                    print("Tweet sent successfully! has idStr=\(tweet?.idStr)")
-                    self.tweet = tweet
+                if error == nil, let tweet=tweet {
+                    self.tweetHandler?.createdNewTweet(tweet)
                     dispatch_async(dispatch_get_main_queue(), {
                         self.tweetTextView.endEditing(true)
-                        self.performSegueWithIdentifier(Constants.Segues.sentTweetSegueName, sender: self)
+                        self.dismissViewControllerAnimated(true, completion:nil)
                     })
                 }else{
                     print("ruh roh. couldn't send tweet")

@@ -116,10 +116,7 @@ class User : NSObject {
             }
             Twitter.favoritesList(params, completion: { (tweets, error) -> Void in
             if error == nil {
-                if tweets!.count == 1 {
-                    // all done!
-                    print("favorites list has \(self.favTweets.count) tweets")
-                }else{
+                if tweets!.count > 1 {
                     if let tweets = tweets {
                         let ids = tweets.map{ $0.idStr! }
                         self.favTweets.appendContentsOf(ids)
@@ -128,7 +125,7 @@ class User : NSObject {
                             NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "getFavoritedTweets", userInfo: nil, repeats: false)
                         }
                     }
-                }
+                } // otherwise, done
             }else{
                 // don't care
             }

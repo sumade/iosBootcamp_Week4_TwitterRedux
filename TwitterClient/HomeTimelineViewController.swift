@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyJSON
 
-class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCreatedHandler {
 
     // MARK: Outlets
     @IBOutlet weak var homeTableHeaderView: UIView!
@@ -102,6 +102,18 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
+        
+        if let id = segue.identifier where id == Constants.Segues.composeTweetSegueName {
+            // sender is self
+            if let _ = sender as? HomeTimelineViewController {
+                let composeVC = segue.destinationViewController as! ComposeTweetViewController
+                composeVC.tweetHandler = self
+            }
+        }
+    }
+    
+    func createdNewTweet(tweet: Tweet) {
+        tweets.insert(tweet, atIndex:0)
     }
     
     @IBAction func logoutButtonTapped(sender: AnyObject) {
@@ -111,7 +123,8 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
     @IBAction func composeTweetTapped(sender: AnyObject) {
         performSegueWithIdentifier(Constants.Segues.composeTweetSegueName, sender: self)
     }
-    
+  
+    /*
     @IBAction func unwindToHomeTimeline(sender: UIStoryboardSegue) {
         if let sourceVC = sender.sourceViewController as? ComposeTweetViewController {
             if let tweet = sourceVC.tweet {
@@ -120,9 +133,10 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
             }
         }
     }
+    */
     
     // MARK: rate status print
-    private var ratePrintLabels = ["/statuses/home_timeline":"home timeline", "/statuses/retweets/:id":"retweet"]//, "/favorites/create":"favorites"]
+    private var ratePrintLabels = ["/statuses/home_timeline":"home timeline", "/statuses/retweets/:id":"retweet"]
     func printRateStatus() {
         // print rate status
         Twitter.getRateStatuses() { (json: JSON?, error: NSError?) -> Void in

@@ -40,4 +40,9 @@ class Constants {
         static let userDidLogoutNotification = "userDidLogoutNotification"
         static let userDidLoginNotification = "userDidLoginNotification"
     }
+    
+    class TwitterParms {
+        static let tweetText = "status"
+        static let replyToStatus = "in_reply_to_status_id"
+    }
 }

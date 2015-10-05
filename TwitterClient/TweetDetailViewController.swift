@@ -12,7 +12,7 @@ class TweetDetailViewController: UIViewController {
 
     private static let timeFormatter : NSDateFormatter = {
         var formatter = NSDateFormatter()
-        formatter.dateFormat = "h:mma d MMM y"
+        formatter.dateFormat = "h:mma dd MMM y"
         return formatter
     }()
 
@@ -72,14 +72,14 @@ class TweetDetailViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let id = segue.identifier where id == Constants.Segues.replyToTweetSegue {
             let composeVC = segue.destinationViewController as! ComposeTweetViewController
-            composeVC.replyUser = myTweet.user!
+            composeVC.replyTweet = myTweet
         }
     }
     
     // MARK: UI actions    
     @IBAction func favoriteButtonTapped(sender: AnyObject) {
         if( User.currentUser!.didFavoriteTweet(myTweet.idStr!) ){
-            // currently favored... unfavor
+            // unfavorite the tweet
             self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_default"), forState: .Normal)
             myTweet.unfavorite({ (error) -> Void in
                 if error == nil {
@@ -89,7 +89,7 @@ class TweetDetailViewController: UIViewController {
                 }
             })
         }else{
-            // favor the tweet
+            // favorite the tweet
             self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_on"), forState: .Normal)
             myTweet.favorite({ (error) -> Void in
                 if error == nil {
