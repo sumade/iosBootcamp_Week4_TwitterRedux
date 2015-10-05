@@ -78,10 +78,14 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
         return tweets.count
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(Constants.TableCells.homeTimelinePrototypeCellName, forIndexPath: indexPath) as! HomelineTableViewCell
         
-        cell.selectionStyle = .None
+       // cell.selectionStyle = .None
         cell.tweet = tweets[indexPath.row]
         
         if( indexPath.row == (tweets.count-1)){

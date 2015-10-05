@@ -70,7 +70,7 @@ class User : NSObject {
                     _currentUser = User()
                     _currentUser!.dictionary = JSON(data: data)
                     print("recovered current user \(_currentUser!.name)")
-                    _currentUser!.getFavoritedTweets()
+                    //_currentUser!.getFavoritedTweets()
                 }
             }
 
@@ -84,7 +84,7 @@ class User : NSObject {
                 // persist current user
                 if let data = try? user.dictionary?.rawData() {
                     NSUserDefaults.standardUserDefaults().setObject(data, forKey: User.persistedKeyName)
-                    _currentUser!.getFavoritedTweets()
+                    //_currentUser!.getFavoritedTweets()
                 }
                 _currentUser!.favTweets = []
             }else{
@@ -137,6 +137,7 @@ class User : NSObject {
         return favTweets.indexOf{ $0 == idStr } != nil
     }
     
+    /*
     func addFavorite(idStr: String) {
         favTweets.append(idStr)
     }
@@ -144,5 +145,6 @@ class User : NSObject {
     func removeFavorite(idStr: String) {
         favTweets = favTweets.filter{ $0 != idStr }
     }
+    */
     
 }

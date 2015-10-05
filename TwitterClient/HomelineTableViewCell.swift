@@ -17,10 +17,23 @@ class HomelineTableViewCell: UITableViewCell {
     @IBOutlet weak var screenName: UILabel!
     @IBOutlet weak var tweetDate: UILabel!
     @IBOutlet weak var tweetText: UILabel!
+    @IBOutlet weak var retweetView: UIView!
+    @IBOutlet weak var retweetHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var retweetNameLabel: UILabel!
     
     var tweet : Tweet! {
         didSet {
-            if let user = tweet.user {
+            if var user = tweet.user {
+                if let replyTweet = tweet.retweet {
+                    retweetNameLabel.text = user.name! + " Retweeted"
+                    user = replyTweet.user!
+                    retweetHeightConstraint.constant = 16
+                    retweetView.hidden = false
+                }else{
+                    retweetView.hidden = true
+                    retweetHeightConstraint.constant = 0
+                }
+            
                 profileImage.setImageWithURL(NSURL(string: user.profileImageURL!)!)
                 profileImage.layer.cornerRadius = 10
                 profileImage.clipsToBounds = true

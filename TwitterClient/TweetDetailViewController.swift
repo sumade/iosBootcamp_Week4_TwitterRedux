@@ -28,11 +28,24 @@ class TweetDetailViewController: UIViewController {
     @IBOutlet weak var favoriteButton: UIButton!
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var replyButton: UIButton!
+    @IBOutlet weak var retweetNameLabel: UILabel!
+    @IBOutlet weak var retweetView: UIView!
+    @IBOutlet weak var retweetViewHeightConstraint: NSLayoutConstraint!
     
     // MARK: Model
     private var myTweet : Tweet! {
         didSet {
-            if let user = myTweet.user {
+            if var user = myTweet.user {
+                if let replyTweet = myTweet.retweet {
+                    retweetNameLabel.text = user.name! + " Retweeted"
+                    user = replyTweet.user!
+                    retweetViewHeightConstraint.constant = 16
+                    retweetView.hidden = false
+                }else{
+                    retweetView.hidden = true
+                    retweetViewHeightConstraint.constant = 0
+                }
+            
                 profileImageView.setImageWithURL(NSURL(string: user.profileImageURL!)!)
                 profileImageView.layer.cornerRadius = 10
                 profileImageView.clipsToBounds = true
@@ -44,8 +57,13 @@ class TweetDetailViewController: UIViewController {
             tweetTextView.text = myTweet.text
             timestampLabel.text = TweetDetailViewController.timeFormatter.stringFromDate(myTweet.createdDate!)
             
-            if User.currentUser!.didFavoriteTweet(myTweet.idStr!) {
+           // if User.currentUser!.didFavoriteTweet(myTweet.idStr!) {
+            if myTweet.favorited {
                 favoriteButton.setBackgroundImage(UIImage(named: "favorite_on"), forState: .Normal)
+            }
+            
+            if myTweet.retweeted {
+                retweetButton.setBackgroundImage(UIImage(named:"retweet_on"), forState: .Normal)
             }
             
             retweetFavoriteCountLabel.text = "(\(myTweet.retweetCount)) RETWEET \t (\(myTweet.favoriteCount)) FAVORITE"
@@ -78,22 +96,22 @@ class TweetDetailViewController: UIViewController {
     
     // MARK: UI actions    
     @IBAction func favoriteButtonTapped(sender: AnyObject) {
-        if( User.currentUser!.didFavoriteTweet(myTweet.idStr!) ){
+        if( myTweet.favorited ){
             // unfavorite the tweet
-            self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_default"), forState: .Normal)
             myTweet.unfavorite({ (error) -> Void in
                 if error == nil {
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_default"), forState: .Normal)
                         self.retweetFavoriteCountLabel.text = "(\(self.myTweet.retweetCount)) RETWEET \t (\(self.myTweet.favoriteCount)) FAVORITE"
                     }
                 }
             })
         }else{
             // favorite the tweet
-            self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_on"), forState: .Normal)
             myTweet.favorite({ (error) -> Void in
                 if error == nil {
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.favoriteButton.setBackgroundImage(UIImage(named: "favorite_on"), forState: .Normal)
                         self.retweetFavoriteCountLabel.text = "(\(self.myTweet.retweetCount)) RETWEET \t (\(self.myTweet.favoriteCount)) FAVORITE"
                     }
                 }
@@ -102,9 +120,18 @@ class TweetDetailViewController: UIViewController {
     }
     
     @IBAction func retweetButtonTapped(sender: AnyObject) {
-        myTweet.retweet()
-        retweetButton.setBackgroundImage(UIImage(named: "retweet_on"), forState: .Normal)
-        retweetFavoriteCountLabel.text = "(\(myTweet.retweetCount)) RETWEET \t (\(myTweet.favoriteCount)) FAVORITE"
+        if !myTweet.retweeted {
+            myTweet.retweet({ (error) -> Void in
+                if error == nil {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.retweetButton.setBackgroundImage(UIImage(named: "retweet_on"), forState: .Normal)
+                        self.retweetFavoriteCountLabel.text = "(\(self.myTweet.retweetCount)) RETWEET \t (\(self.myTweet.favoriteCount)) FAVORITE"
+                    }
+                }
+            })
+        }else{
+            
+        }
     }
 
     @IBAction func replyButtonTapped(sender: AnyObject) {
