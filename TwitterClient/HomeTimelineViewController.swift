@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyJSON
 
-class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, TweetCreatedHandler {
+class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     // MARK: Outlets
     @IBOutlet weak var homeTableHeaderView: UIView!
@@ -25,6 +25,10 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
     
     // MARK: hacks
     var refreshControl : UIRefreshControl!
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: Constants.Notifications.tweetCreated, object: nil)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,10 +52,16 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
         let dummyTableVC = UITableViewController()
         dummyTableVC.tableView = homeTableView
         dummyTableVC.refreshControl = refreshControl
+        
+        
+        // notification of new tweets
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "createdNewTweet:", name: Constants.Notifications.tweetCreated, object: nil)
+
 
         fetchHomeTimeline()
     }
-
+    
+ 
     func fetchHomeTimeline() {
         // get home timeline
         Twitter.homeTimeline(nil) { (tweets, error) -> Void in
@@ -106,18 +116,17 @@ class HomeTimelineViewController: UIViewController, UITableViewDelegate, UITable
                 }
             }
         }
-        
-        if let id = segue.identifier where id == Constants.Segues.composeTweetSegueName {
-            // sender is self
-            if let _ = sender as? HomeTimelineViewController {
-                let composeVC = segue.destinationViewController as! ComposeTweetViewController
-                composeVC.tweetHandler = self
-            }
-        }
     }
     
-    func createdNewTweet(tweet: Tweet) {
-        tweets.insert(tweet, atIndex:0)
+    func createdNewTweet(notice: NSNotification) {
+        if let dict = notice.userInfo as? Dictionary<String, AnyObject> {
+            if let tweet = dict["tweet"] as? Tweet {
+                // adding new tweet
+                print("adding new tweet")
+                tweets.insert(tweet, atIndex:0)
+            }
+        
+        }
     }
     
     @IBAction func logoutButtonTapped(sender: AnyObject) {

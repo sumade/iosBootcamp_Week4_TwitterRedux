@@ -39,6 +39,7 @@ class Constants {
     class Notifications {
         static let userDidLogoutNotification = "userDidLogoutNotification"
         static let userDidLoginNotification = "userDidLoginNotification"
+        static let tweetCreated = "userDidCreateTweet"
     }
     
     class TwitterParms {

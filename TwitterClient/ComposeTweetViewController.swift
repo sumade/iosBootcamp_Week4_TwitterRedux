@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol TweetCreatedHandler {
-    func createdNewTweet(tweet: Tweet)
-}
-
 class ComposeTweetViewController: UIViewController, UITextViewDelegate {
 
     // MARK: ui outlets
@@ -21,7 +17,6 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var tweetTextView: UITextView!
     
     private var tweet : Tweet?
-    var tweetHandler : TweetCreatedHandler?
     weak var replyTweet : Tweet?
     
     private static let maxCharacters = 140
@@ -104,7 +99,8 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
             Twitter.sendTweet(text, params: params) {
                 (tweet: Tweet?, error: NSError?) -> Void in
                 if error == nil, let tweet=tweet {
-                    self.tweetHandler?.createdNewTweet(tweet)
+                    let userInfo = ["tweet":tweet]
+                    NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notifications.tweetCreated, object: nil, userInfo: userInfo)
                     dispatch_async(dispatch_get_main_queue(), {
                         self.tweetTextView.endEditing(true)
                         self.dismissViewControllerAnimated(true, completion:nil)
