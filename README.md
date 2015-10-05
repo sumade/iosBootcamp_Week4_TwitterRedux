@@ -48,8 +48,6 @@ Time spent: `21`
 
 ![Video Walkthrough](TwitterWalkthrough.gif)
 
-<br/>
-
 ![Video Walkthrough Part2](TwitterWalkthrough_Part2.gif)
 
 
