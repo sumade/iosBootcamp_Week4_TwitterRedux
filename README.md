@@ -48,6 +48,11 @@ Time spent: `21`
 
 ![Video Walkthrough](TwitterWalkthrough.gif)
 
+<br/>
+
+![Video Walkthrough Part2](TwitterWalkthrough_Part2.gif)
+
+
 ### Credits
 * [Twitter API](https://apps.twitter.com/)
 * [BDBOAuth1Manager](https://github.com/bdbergeron/BDBOAuth1Manager)
