@@ -35,6 +35,7 @@ Time spent: `21`
 
 - [x] When composing, you should have a countdown in the upper right for the tweet limit.
   - it's in the lower left next to the 'tweet' button. also, the 'tweet' button is disabled if exceeding the tweet limit.  
+  - the count and tweet button will automatically relocate if the keyboard appears. 
 - [x] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
 - [-] Retweeting and favoriting should increment the retweet and favorite count.
   - only favoriting increments the count
