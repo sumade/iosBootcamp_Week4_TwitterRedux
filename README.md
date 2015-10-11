@@ -36,7 +36,7 @@ Time spent: `20`
 
 ### Walkthrough
 
-![Video Walkthrough](https://raw.githubusercontent.com/mvinceable/twitter/master/demo.gif)
+![Video Walkthrough](TwitterRedux_Walkthrough.gif)
 
 
 ### Credits
