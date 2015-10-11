@@ -19,6 +19,16 @@ class User : NSObject {
         static let profileImageHttpsURL = "profile_image_url_https"
         static let screenName = "screen_name"
         static let verified = "verified"
+        static let bannerURL = "profile_banner_url"
+        static let description = "description"
+        static let defaultBackground = "default_profile"
+        static let defaultImage = "default_profile_image"
+        static let location = "location"
+        static let followedByCurrentUser = "following"
+        static let followerCount = "followers_count"
+        static let followingCount = "friends_count"
+        static let numberOfTweets = "statuses_count"
+        static let profileURL = "url"
     }
     
     private static let persistedKeyName = "TWITTER.CURRENT_USER"
@@ -30,6 +40,17 @@ class User : NSObject {
     private(set) var profileImageHttpsURL : String?
     private(set) var screenName : String?
     private(set) var verified : Bool = false
+    private(set) var bannerURL : String?
+    private(set) var descriptionText : String?
+    private(set) var usesDefaultImage : Bool = false
+    private(set) var usesDefaultBackground : Bool = false
+    private(set) var location : String?
+    private(set) var followingCount : Int = 0
+    private(set) var followersCount : Int = 0
+    private(set) var numberOfTweets : Int = 0
+    private(set) var isFollowedByCurrentUser : Bool = false
+    private(set) var profileURL : String?
+    
     
     private var dictionary : JSON? {
         didSet {
@@ -40,6 +61,23 @@ class User : NSObject {
                 self.verified = json[JSONKeys.verified].boolValue
                 self.profileImageURL = json[JSONKeys.profileImageURL].string?.stringByReplacingOccurrencesOfString("_normal.jpg", withString: "_bigger.jpg")
                 self.profileImageHttpsURL = json[JSONKeys.profileImageHttpsURL].string?.stringByReplacingOccurrencesOfString("_normal.jpg", withString: "_bigger.jpg")
+                
+                self.bannerURL = json[JSONKeys.bannerURL].string                
+                self.descriptionText = json[JSONKeys.description].string
+                if let usesDefault = json[JSONKeys.defaultBackground].bool {
+                    self.usesDefaultBackground = usesDefault
+                }
+                if let usesDefaultImage = json[JSONKeys.defaultImage].bool {
+                    self.usesDefaultImage = usesDefaultImage
+                }
+                self.location = json[JSONKeys.location].string
+                self.followingCount = json[JSONKeys.followingCount].intValue
+                self.followersCount = json[JSONKeys.followerCount].intValue
+                self.numberOfTweets = json[JSONKeys.numberOfTweets].intValue
+                
+                self.isFollowedByCurrentUser = json[JSONKeys.followedByCurrentUser].boolValue
+                self.profileURL = json[JSONKeys.profileURL].string
+                
             }else{
                 // TODO: clear the user info
             }
@@ -102,7 +140,7 @@ class User : NSObject {
         
         NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notifications.userDidLogoutNotification, object: nil)
     }
-    
+        
     private var favTweets : [String] = []
     private var currentFavMaxId = ""
     

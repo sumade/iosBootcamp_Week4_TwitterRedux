@@ -63,7 +63,7 @@ class Tweet : NSObject {
                 self.user = User.createUser(json[JSONKeys.user])
                 
                 createdDate = Tweet.twitterDateFormatter.dateFromString(self.createdDateString!)
-                self.sinceDateString = Tweet.formatTimeElapsed(self.createdDate!)
+                self.sinceDateString = Helpers.formatTimeElapsed(self.createdDate!)
                 
                 if json[JSONKeys.retweetedStatus] != nil {
                     retweet = Tweet.createTweet(json[JSONKeys.retweetedStatus])
@@ -90,30 +90,12 @@ class Tweet : NSObject {
     static func createTweets(array: [JSON]) -> [Tweet] {
         return array.map{ Tweet.createTweet($0) }
     }
-    
-    
-    private static var elapsedTimeFormatter: NSDateComponentsFormatter = {
-        let formatter = NSDateComponentsFormatter()
-        formatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Abbreviated
-        formatter.collapsesLargestUnit = true
-        formatter.maximumUnitCount = 1
-        return formatter
-    }()
-
-    static func formatTimeElapsed(sinceDate: NSDate) -> String {
-        let interval = NSDate().timeIntervalSinceDate(sinceDate)
-        return elapsedTimeFormatter.stringFromTimeInterval(interval)!
-    }
-    
-    static func formatIntervalElapsed(interval: NSTimeInterval) -> String {
-        return elapsedTimeFormatter.stringFromTimeInterval(interval)!
-    }
-    
+        
     func retweet(completion: ((error: NSError?) -> Void)) {
         Twitter.retweetTweet(self) { (tweet, error) -> Void in
             if error == nil {
-                self.favoriteCount = tweet!.favoriteCount
-                self.retweetCount = tweet!.retweetCount
+                self.favoriteCount = tweet!.retweet!.favoriteCount
+                self.retweetCount = tweet!.retweet!.retweetCount
                 self.retweeted = true
                 completion(error: nil)
             }else{

@@ -8,8 +8,10 @@
 
 import UIKit
 
-class HomelineTableViewCell: UITableViewCell {
+class TimelineTableViewCell: UITableViewCell {
     
+    // MARK: delegates
+    weak var showProfileDelegate: ShowProfileDelegate?
     
     // MARK: ui outlets
     @IBOutlet weak var profileImage: UIImageView!
@@ -43,6 +45,10 @@ class HomelineTableViewCell: UITableViewCell {
             }
             tweetDate.text = tweet.sinceDateString
             tweetText.text = tweet.text
+            
+            // add gesture recognizer for profile
+            let imageTap = UITapGestureRecognizer(target: self, action: "profileImageTapped:")
+            profileImage.addGestureRecognizer(imageTap)
         }
     }
 
@@ -55,6 +61,15 @@ class HomelineTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+    
+    func profileImageTapped(recognizer: UITapGestureRecognizer){
+        // need to pass to view controller
+        if let user = tweet.retweet?.user {
+            showProfileDelegate?.showProfileVC( user )
+        }else{
+            showProfileDelegate?.showProfileVC( tweet.user! )
+        }
     }
 
 }

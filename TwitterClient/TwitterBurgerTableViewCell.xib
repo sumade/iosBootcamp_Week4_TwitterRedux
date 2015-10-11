@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="TwitterBurgerTableViewCell" customModule="TwitterClient" customModuleProvider="target"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TwitterBurgerTableViewCell" rowHeight="48" id="KGk-i7-Jjw" customClass="TwitterBurgerTableViewCell" customModule="TwitterClient" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="260" height="47.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="9cp-t4-RLn">
+                        <rect key="frame" x="4" y="4" width="32" height="32"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="32" id="DMf-wU-hAO"/>
+                            <constraint firstAttribute="height" constant="32" id="PLw-WU-cav"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" text="menu name" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0o1-IO-sVH">
+                        <rect key="frame" x="40" y="18" width="85" height="18"/>
+                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="9cp-t4-RLn" firstAttribute="bottom" secondItem="0o1-IO-sVH" secondAttribute="bottom" id="8Jv-fO-0s0"/>
+                    <constraint firstItem="9cp-t4-RLn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="4" id="CDn-20-wan"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="9cp-t4-RLn" secondAttribute="bottom" constant="4" id="PAq-SE-BWv"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="9cp-t4-RLn" secondAttribute="bottom" constant="-1.5" id="Uv6-89-DI6"/>
+                    <constraint firstAttribute="bottom" secondItem="9cp-t4-RLn" secondAttribute="bottom" constant="4" id="ZoY-Bf-nDC"/>
+                    <constraint firstItem="9cp-t4-RLn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="4" id="bDb-qp-ww8"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="0o1-IO-sVH" secondAttribute="trailing" constant="8" id="enF-U4-JxH"/>
+                    <constraint firstItem="0o1-IO-sVH" firstAttribute="leading" secondItem="9cp-t4-RLn" secondAttribute="trailing" constant="4" id="gk9-zd-dsQ"/>
+                    <constraint firstAttribute="bottom" secondItem="0o1-IO-sVH" secondAttribute="bottom" constant="4" id="h16-Of-Xdy"/>
+                    <constraint firstAttribute="bottom" secondItem="9cp-t4-RLn" secondAttribute="bottom" constant="4" id="nZT-lr-Jbo"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="Uv6-89-DI6"/>
+                        <exclude reference="ZoY-Bf-nDC"/>
+                        <exclude reference="nZT-lr-Jbo"/>
+                        <exclude reference="h16-Of-Xdy"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="theImageView" destination="9cp-t4-RLn" id="5Kb-I1-ItH"/>
+                <outlet property="theNameLabel" destination="0o1-IO-sVH" id="9Ko-k4-84c"/>
+            </connections>
+            <point key="canvasLocation" x="355.5" y="105"/>
+        </tableViewCell>
+    </objects>
+</document>

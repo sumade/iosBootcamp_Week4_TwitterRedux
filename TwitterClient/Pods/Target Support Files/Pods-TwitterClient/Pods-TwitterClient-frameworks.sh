@@ -56,10 +56,12 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-TwitterClient/BDBOAuth1Manager.framework'
   install_framework 'Pods-TwitterClient/MBProgressHUD.framework'
   install_framework 'Pods-TwitterClient/SwiftyJSON.framework'
+  install_framework 'Pods-TwitterClient/UIImageEffects.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-TwitterClient/AFNetworking.framework'
   install_framework 'Pods-TwitterClient/BDBOAuth1Manager.framework'
   install_framework 'Pods-TwitterClient/MBProgressHUD.framework'
   install_framework 'Pods-TwitterClient/SwiftyJSON.framework'
+  install_framework 'Pods-TwitterClient/UIImageEffects.framework'
 fi

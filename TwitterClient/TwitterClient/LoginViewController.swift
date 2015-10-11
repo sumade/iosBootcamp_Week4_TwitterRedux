@@ -26,6 +26,10 @@ class LoginViewController: UIViewController, TwitterLoginHandler {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .LightContent
+    }
 
 
     @IBAction func loginTapped(sender: AnyObject) {
@@ -34,7 +38,9 @@ class LoginViewController: UIViewController, TwitterLoginHandler {
     
     // MARK: Twitter login delegates
     func loginCompletion() -> Void {
-        self.performSegueWithIdentifier(Constants.Segues.loginToHomeTimelineSegueName,  sender: self)
+        NSNotificationCenter.defaultCenter().postNotificationName(Constants.Notifications.userDidLoginNotification, object: nil)
+//        self.performSegueWithIdentifier(Constants.Segues.loginToHomeTimeline,  sender: self)
+        
     }
     
     func loginFailure(error: NSError?) -> Void {

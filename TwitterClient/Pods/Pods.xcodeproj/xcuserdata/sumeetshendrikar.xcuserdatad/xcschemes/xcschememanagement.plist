@@ -29,25 +29,35 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>UIImageEffects.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>408A8DB3003276CFE775168BDF572DC2</key>
+		<key>0FD5E63AC8424DE7CED642F99E98121C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>497DCEBBA1DF35472B9AE4EC20790D34</key>
+		<key>160ADEDD495F9AF2CA01453A9BDBFEF8</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>6FBD81939EFC224C441DA7E950FD5CA4</key>
+		<key>1FF8BE6CE3C2ECF116D55C3A296893E5</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7176FB9636ACCF0E9FA6D5A41CEF3E60</key>
+		<key>3566313DCF506B4AF6FEA670688AEEF3</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>96A7CED52FCB00A84DE099276F21767A</key>
 		<dict>
 			<key>primary</key>
 			<true/>

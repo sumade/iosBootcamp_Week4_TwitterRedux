@@ -18,16 +18,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        
+        // add notification handler for user log out event
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "userLoggedOut", name: Constants.Notifications.userDidLogoutNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "userLoggedIn", name:Constants.Notifications.userDidLoginNotification, object:nil)
         
-        
-        // skip login if user is remembered
+        // skip login if user is already logged in
         if User.currentUser != nil {
-            let vc = mainStoryboard.instantiateViewControllerWithIdentifier(Constants.Storyboards.homeTimelineStoryboardName) as UIViewController
-            window?.rootViewController = vc
+            userLoggedIn()
         }
         
         return true
+    }
+    
+    func userLoggedIn() {
+        let menuViewController = HamburgerMenuViewController(nibName: "HamburgerMenuViewController", bundle: nil)
+        menuViewController.burgerDelegate = TwitterHamburgers(storyboard: mainStoryboard)        
+        window?.rootViewController = menuViewController
     }
     
     func userLoggedOut() {

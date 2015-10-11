@@ -33,12 +33,14 @@ class Twitter  {
         // resource related
         static let userInfo = "1.1/account/verify_credentials.json"
         static let homeTimeline = "1.1/statuses/home_timeline.json"
+        static let userTimeline = "1.1/statuses/user_timeline.json"
         static let rateStatus = "1.1/application/rate_limit_status.json?resources=statuses"//,favorites"
         static let sendNewTweet = "1.1/statuses/update.json"
         static let favoriteTweet = "1.1/favorites/create.json" // needs ?id=
         static let unfavoriteTweet = "1.1/favorites/destroy.json" // needs ?id=
         static let retweetTweet = "1.1/statuses/retweet/" //  retweet/id.json
         static let favoritesList = "1.1/favorites/list.json"
+        static let mentions = "1.1/statuses/mentions_timeline.json"
     }
     
     private static let oauthMgr = BDBOAuth1RequestOperationManager(baseURL: NSURL(string: MahStrings.baseUrl)!, consumerKey: MahStrings.consumerKey, consumerSecret: MahStrings.consumerSecret)
@@ -93,13 +95,10 @@ class Twitter  {
             }
         }
         
+        // set default number of tweets to receive as 200
         if actualParams.valueForKey("count") == nil {
             actualParams["count"] = 200
         }
-        
-//        let foo = actualParams.valueForKey("count") as! Int
-//        print("\(foo)")
-        
         
         oauthMgr.GET(MahStrings.homeTimeline, parameters:actualParams,
             success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
@@ -108,10 +107,37 @@ class Twitter  {
                 if operation.response.statusCode == LimitStatus.RateExceeded {
                     let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
                     let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
-                    print("home timeline rate limit exceeded! rate limit expires in \(Tweet.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                    print("home timeline rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
                 }
                 completion(tweets: nil, error: error)
             })
+    }
+    
+    static func userTimeline(user: User, params: NSDictionary?, completion: ((tweets: [Tweet]?, error: NSError?) -> Void)) {
+        let actualParams : NSMutableDictionary = [:]
+        if let params = params {
+            if params.count > 0 {
+                actualParams.addEntriesFromDictionary(params as [NSObject : AnyObject])
+            }
+        }
+        
+        actualParams["user_id"] = user.idStr
+        if actualParams.valueForKey("count") == nil {
+            actualParams["count"] = 200
+        }
+
+        oauthMgr.GET(MahStrings.userTimeline, parameters:actualParams,
+            success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                completion(tweets: Tweet.createTweets(JSON(response).array!), error:nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                if operation.response.statusCode == LimitStatus.RateExceeded {
+                    let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
+                    let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
+                    print("user timeline rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                }
+                completion(tweets: nil, error: error)
+        })
+
     }
     
     static func sendTweet(tweet: String, params: NSDictionary?, completion: ((tweet: Tweet?, error: NSError?) -> Void)) {
@@ -146,7 +172,7 @@ class Twitter  {
                 if operation.response.statusCode == LimitStatus.RateExceeded {
                     let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
                     let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
-                    print("favorites list rate limit exceeded! rate limit expires in \(Tweet.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                    print("favorites list rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
                 }
                 completion(tweets: nil, error: error)
         })
@@ -162,7 +188,7 @@ class Twitter  {
                 if operation.response.statusCode == LimitStatus.RateExceeded {
                     let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
                     let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
-                    print("favorite tweet rate limit exceeded! rate limit expires in \(Tweet.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                    print("favorite tweet rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
                 }else if operation.response.statusCode == LimitStatus.TweetExceeded {
                     // already favorited tweet, no error
                     return
@@ -181,7 +207,7 @@ class Twitter  {
                 if operation.response.statusCode == LimitStatus.RateExceeded {
                     let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
                     let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
-                    print("unfavorite tweet rate limit exceeded! rate limit expires in \(Tweet.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                    print("unfavorite tweet rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
                 }
                 completion(tweet: nil, error: error)
         })
@@ -198,7 +224,7 @@ class Twitter  {
                 if operation.response.statusCode == LimitStatus.RateExceeded {
                     let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
                     let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
-                    print("retweet tweet rate limit exceeded! rate limit expires in \(Tweet.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                    print("retweet tweet rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
                 }
                 completion(tweet: nil, error: error)
         })
@@ -207,6 +233,33 @@ class Twitter  {
 
     static func replyTweet(tweet: Tweet, completion: ((error: NSError?) -> Void)) {
         
+    }
+
+    static func mentions(params: NSDictionary?, completion: ((tweets: [Tweet]?, error: NSError?) -> Void)) {
+        let actualParams : NSMutableDictionary = [:]
+        if let params = params {
+            if params.count > 0 {
+                actualParams.addEntriesFromDictionary(params as [NSObject : AnyObject])
+            }
+        }
+        
+        // set default number of tweets to receive as 200
+        if actualParams.valueForKey("count") == nil {
+            actualParams["count"] = 200
+        }
+        
+        oauthMgr.GET(MahStrings.mentions, parameters:actualParams,
+            success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+                completion(tweets: Tweet.createTweets(JSON(response).array!), error:nil)
+            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                if operation.response.statusCode == LimitStatus.RateExceeded {
+                    let expirationEpoch = operation.response.allHeaderFields["x-rate-limit-reset"] as! String
+                    let expirationDate = NSDate(timeIntervalSince1970: Double(Int(expirationEpoch)!))
+                    print("get mentions rate limit exceeded! rate limit expires in \(Helpers.formatIntervalElapsed(expirationDate.timeIntervalSinceNow))")
+                }
+                completion(tweets: nil, error: error)
+        })
+
     }
 
     static func getRateStatuses(handler: ((response: JSON?, error: NSError?) -> Void)) {
@@ -218,5 +271,6 @@ class Twitter  {
                 handler(response:nil, error: error)
             })
     }
+    
     
 }

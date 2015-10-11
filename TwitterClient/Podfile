@@ -9,5 +9,6 @@ target 'TwitterClient' do
 	pod 'BDBOAuth1Manager'
 	pod 'SwiftyJSON'
 	pod 'MBProgressHUD'
+	pod 'UIImageEffects'
 end
 

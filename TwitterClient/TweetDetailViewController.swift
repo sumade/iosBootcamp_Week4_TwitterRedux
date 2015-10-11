@@ -79,6 +79,10 @@ class TweetDetailViewController: UIViewController {
         
         // set the tweet  --> hack because using segues to manage the transition between view controllers
         myTweet = holderTweet
+        
+        // add gesture recognizer for profile
+        let imageTap = UITapGestureRecognizer(target: self, action: "profileImageTapped:")
+        profileImageView.addGestureRecognizer(imageTap)
     }
 
     override func didReceiveMemoryWarning() {
@@ -86,11 +90,26 @@ class TweetDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .Default
+    }
+    
     // MARK: Actions
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let id = segue.identifier where id == Constants.Segues.replyToTweetSegue {
+        if let id = segue.identifier where id == Constants.Segues.replyToTweet {
             let composeVC = segue.destinationViewController as! ComposeTweetViewController
             composeVC.replyTweet = myTweet
+        }
+        
+        // go to profile view
+        if let id = segue.identifier where id == Constants.Segues.tweetDetailToProfile {
+            let profileVC = segue.destinationViewController as! UserProfileViewController
+            if let replyTweet = myTweet.retweet {
+                profileVC.passedUser = replyTweet.user
+            }else{
+                profileVC.passedUser = myTweet.user
+            }
+
         }
     }
     
@@ -147,4 +166,10 @@ class TweetDetailViewController: UIViewController {
             self.dismissViewControllerAnimated(true, completion:nil)
         }
     }
+    
+    func profileImageTapped(recognizer: UITapGestureRecognizer){
+        self.performSegueWithIdentifier(Constants.Segues.tweetDetailToProfile, sender: self)
+    }
+    
+
 }

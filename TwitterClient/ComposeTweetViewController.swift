@@ -18,6 +18,7 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
     
     private var tweet : Tweet?
     weak var replyTweet : Tweet?
+    weak var atUser : User?
     
     private static let maxCharacters = 140
     
@@ -52,7 +53,13 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         characterCountLabel.text = "\(characterCount)"
         tweetTextView.delegate = self
         
+        // configure user name if retweet
         if let user = replyTweet?.user {
+            tweetTextView.text = "@" + user.screenName!
+        }
+        
+        // or configure use name if at user
+        if let user = atUser {
             tweetTextView.text = "@" + user.screenName!
         }
 
@@ -67,9 +74,13 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return .Default
+    }
+    
     func textViewDidBeginEditing(textView: UITextView) {
         tweetTextView.textColor = UIColor.blackColor()
-        if let _ = replyTweet?.user {
+        if let _ = replyTweet?.user, let _ = atUser {
             // do nothing for now
         }else{
             // clear the text field
@@ -89,11 +100,11 @@ class ComposeTweetViewController: UIViewController, UITextViewDelegate {
     @IBAction func sendTweet(sender: AnyObject) {
         if let text = tweetTextView.text where !text.isEmpty {
             // tweet to compose
-            var params : Dictionary<String, String>= [Constants.TwitterParms.tweetText:text]
+            var params : Dictionary<String, String>= [Constants.TwitterParams.tweetText:text]
             
             // if in reply to....
             if let reply = replyTweet {
-                params[Constants.TwitterParms.replyToStatus] = reply.idStr
+                params[Constants.TwitterParams.replyToStatus] = reply.idStr
             }
             
             Twitter.sendTweet(text, params: params) {
