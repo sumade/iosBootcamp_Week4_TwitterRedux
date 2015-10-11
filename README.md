@@ -55,6 +55,8 @@ Time spent: `21`
 * [Twitter API](https://apps.twitter.com/)
 * [BDBOAuth1Manager](https://github.com/bdbergeron/BDBOAuth1Manager)
 * [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
+* follow icon: Add Contact by Mike Ashley from the Noun Project
+* following icon: Verified User by Keta Shah from the Noun Project
 * logout icon: User by José Manuel de Laá from the Noun Project
 * compose icon: quill by Simple Icons from the Noun Project
 * my wife for letting me do this again
