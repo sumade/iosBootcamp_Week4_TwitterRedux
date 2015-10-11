@@ -1,63 +1,51 @@
-## Twitter 
+## Twitter Redux
 
-This is a basic twitter app to read and compose tweets the [Twitter API](https://apps.twitter.com/).
-
-Time spent: `21`
+Time spent: `20`
 
 ### Features
-- user can sign into twitter usign OAuth login flow
-- signed in user is persisted across restarts
-- user can view last 200 tweets in home timeline
-- user can create new tweets
-- new tweets are automatically added to the home timeline without fetching from twitter api
-- user can favorite or retweet a tweet
-- user can unfavorite a tweet
-- user can reply to a user for a given tweet
-- user sees a character countdown when composing a new tweet. shows how many characters remaining until limit of 140 is reached. if limit is reached, the 'tweet' button is disabled.  also, the remaining characters font color changes to red when approaching the limit of 140, or if exceeding the limit.
-- favoriting a tweet increases the count
-- user can't click links in tweet text while in the home timeline view, but can click on links while in the detail view
-- all twitter api hidden behind a singleton
+- added some stuff to the previous twitter client
+- due to time constraints, i didn't get a chance to clean up the encapsulation of properties (private, etc)
+- user profile view mimics the existing twitter client by having the banner image shrink in size as you start scrolling through the user's timeline.  also, the banner image becomes blurry, and i display the name and number of tweets in the blurred banner image.
+- the hamburger menu is implemented with a custom view controller loaded from a .xib. for a clean separation of concerns, the hamburger menu uses a delegate to populate the actual fields and respond to events.  "TwitterHamburgers.swift" is the implementation of the delegate for my twitter client.
+- however, i had some problems trying to create a custom table cell class from a xib.  i tried to use this cell in my TwitterHamburgers class, but ran into some problems with auto layout.  I couldn't quite figure out how to get the cell to obey the auto layout constraints of the containing table, even though the auto layout editor doesnt show any problems with the constraints i configured in the xib itself.  hence the weird looking ui for the hamburger menu
 
 #### Required
 
-- [x] User can sign in using OAuth login flow
-- [x] User can view last 20 tweets from their home timeline
-- [x] The current signed in user will be persisted across restarts
-- [x] In the home timeline, user can view tweet with the user profile picture, username, tweet text, and timestamp.  In other words, design the custom cell with the proper Auto Layout settings.  You will also need to augment the model classes.
-- [x] User can pull to refresh
-- [x] User can compose a new tweet by tapping on a compose button.
-- [x] User can tap on a tweet to view it, with controls to retweet, favorite, and reply.
-- [-] User can retweet, favorite, and reply to the tweet directly from the timeline feed.
-   - user can't do the above from the timeline feed. can only do these actions after tapping on the tweet.
-   - user can unfavorite a tweet too.
-  
+- [x] Hamburger menu
+   - [-] Dragging anywhere in the view should reveal the menu.
+      - Not quite anywhere... only certain screens support the hamburger menu. 
+   - [x] The menu should include links to your profile, the home timeline, and the mentions view.
+   - [x] The menu can look similar to the LinkedIn menu below or feel free to take liberty with the UI.
+- [x] Profile page
+   - [x] Contains the user header view
+   - [x] Contains a section with the users basic stats: # tweets, # following, # followers
+- [x] Home Timeline
+   - [x] Tapping on a user image should bring up that user's profile page
+
 #### Optional
 
-- [x] When composing, you should have a countdown in the upper right for the tweet limit.
-  - it's in the lower left next to the 'tweet' button. also, the 'tweet' button is disabled if exceeding the tweet limit.  
-  - the count and tweet button will automatically relocate if the keyboard appears. 
-- [x] After creating a new tweet, a user should be able to view it in the timeline immediately without refetching the timeline from the network.
-- [-] Retweeting and favoriting should increment the retweet and favorite count.
-  - only favoriting increments the count
-- [-] User should be able to unretweet and unfavorite and should decrement the retweet and favorite count.
-  - only unfavoriting decrements the count. 
-- [x] Replies should be prefixed with the username and the reply_id should be set when posting the tweet,
-- [ ] User can load more tweets once they reach the bottom of the feed using infinite loading similar to the actual Twitter client.
+- [ ] Profile Page
+   - [ ] Optional: Implement the paging view for the user description.
+   - [x] Optional: As the paging view moves, increase the opacity of the background screen. See the actual Twitter app for this effect
+   - [ ] Optional: Pulling down the profile page should blur and resize the header image.
+- [ ] Optional: Account switching
+   - [ ] Long press on tab bar to bring up Account view with animation
+   - [ ] Tap account to switch to
+   - [ ] Include a plus button to Add an Account
+   - [ ] Swipe to delete an account
 
 ### Walkthrough
 
-![Video Walkthrough](TwitterWalkthrough.gif)
-
-![Video Walkthrough Part2](TwitterWalkthrough_Part2.gif)
+![Video Walkthrough](https://raw.githubusercontent.com/mvinceable/twitter/master/demo.gif)
 
 
 ### Credits
 * [Twitter API](https://apps.twitter.com/)
 * [BDBOAuth1Manager](https://github.com/bdbergeron/BDBOAuth1Manager)
 * [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
+* [UIImageEffects](https://cocoapods.org/pods/UIImageEffects) for blurring
 * follow icon: Add Contact by Mike Ashley from the Noun Project
 * following icon: Verified User by Keta Shah from the Noun Project
 * logout icon: User by José Manuel de Laá from the Noun Project
 * compose icon: quill by Simple Icons from the Noun Project
-* my wife for letting me do this again
-* homer simpson for coming up with the name joey joe joe jr shabadu
+* my wife for letting me do this again, again
