@@ -50,7 +50,7 @@ class TimelineViewController: UIViewController,  TimelineControllerReloadDelegat
         
         // hack
         refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: "fetchHomeTimeline", forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: "fetchData", forControlEvents: UIControlEvents.ValueChanged)
         
         let dummyTableVC = UITableViewController()
         dummyTableVC.tableView = homeTableView

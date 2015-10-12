@@ -51,6 +51,7 @@ class UserProfileViewController: UIViewController, TimelineControllerReloadDeleg
                     }, failure: nil)
                 self.profileHeaderView.sendSubviewToBack(profileHeaderImageView)
             }else{
+                profileHeaderImageView.image = nil
                 profileHeaderImageView.hidden = true
                 profileHeaderView.backgroundColor = Constants.Colors.Blue
                 self.bannerImage = nil
